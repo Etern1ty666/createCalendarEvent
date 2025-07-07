@@ -33,7 +33,7 @@ async def create_calendar_event_in_bitrix(user_id, start_date, end_date, title):
         return response
 
 
-@app.get("/createCalendarEvent")
+@app.post("/createCalendarEvent")
 async def create_calendar_event(request: Request):
     body = (await request.body()).decode("utf-8")
     data = urllib.parse.parse_qs(body)
@@ -96,6 +96,6 @@ async def ping():
     return {"status": "ok", "message": "Hi"}
 
 
-if name == "__main__":
+if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app:app", host=os.getenv("HOST"), port=int(os.getenv("PORT")), reload=True)
+    uvicorn.run("app:app", host=os.getenv("HOST"), port=int(os.getenv("PORT", 8000)), reload=True)
