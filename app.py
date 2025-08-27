@@ -34,7 +34,7 @@ async def event_already_exists(event_deal, event_from, event_to):
     async with httpx.AsyncClient() as client:
         resp = await client.post(
             f"{BITRIX_WEBHOOK_URL}calendar.event.get",
-            json={
+            json = {
                 "ownerId": TO_CALENDAR_OWNER_ID,
                 "type": "user",
                 "from": event_from,
@@ -42,6 +42,7 @@ async def event_already_exists(event_deal, event_from, event_to):
             }
         )
         events = resp.json().get("result", [])
+        print('Ивенты в данном промежутке:', events)
         for event in events:
             UF_CRM_CAL_EVENT = event.get("UF_CRM_CAL_EVENT") or []
             result = [s.removeprefix("D_") for s in UF_CRM_CAL_EVENT if s.startswith("D_")]
@@ -50,7 +51,7 @@ async def event_already_exists(event_deal, event_from, event_to):
     return {'status': False, 'event_id': ''}
 
 
-async def update_calendar_event_in_bitrix(event_id, start_date, end_date, title, deal_id, participants, object_passport_link, should_skip_time='N'):
+async def update_calendar_event_in_bitrix(event_id, start_date, end_date, title, deal_id, participants, object_passport_link, should_skip_time='Y'):
     params = {
                 "id": int(event_id),
                 "from": start_date,
@@ -80,7 +81,7 @@ async def update_calendar_event_in_bitrix(event_id, start_date, end_date, title,
 
 
 
-async def create_calendar_event_in_bitrix(start_date, end_date, title, deal_id, participants, object_passport_link, should_skip_time='N'):
+async def create_calendar_event_in_bitrix(start_date, end_date, title, deal_id, participants, object_passport_link, should_skip_time='Y'):
     params = {
                 "from": start_date,
                 "to": end_date,
